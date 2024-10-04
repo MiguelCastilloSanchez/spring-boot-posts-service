@@ -4,6 +4,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,6 +55,24 @@ public class PostsController {
         String userId = tokenService.getIdFromToken(token);
 
         return postService.likePost(postId, userId);
+    }
+
+    @SuppressWarnings("rawtypes")
+    @PostMapping("/{postId}/unlike")
+    public ResponseEntity unlikePost(@PathVariable String postId, @RequestHeader("Authorization") String token){
+
+        String userId = tokenService.getIdFromToken(token);
+
+        return postService.unlikePost(postId, userId);
+    }
+
+    @SuppressWarnings("rawtypes")
+    @DeleteMapping("/{postId}/delete")
+    public ResponseEntity deletePost(@PathVariable String postId, @RequestHeader("Authorization") String token){
+
+        String userId = tokenService.getIdFromToken(token);
+
+        return postService.deletePost(postId, userId);
     }
 
 }

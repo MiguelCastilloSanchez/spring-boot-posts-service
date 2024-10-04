@@ -46,7 +46,7 @@ public class PostService {
                 if (!post.getLikes().contains(userId)) {
                     post.addLike(userId);
                     postRepository.save(post);
-                    return ResponseEntity.status(HttpStatus.CREATED).build();
+                    return ResponseEntity.status(HttpStatus.OK).build();
                 } else {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
                 }
@@ -54,8 +54,57 @@ public class PostService {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error interno del servidor: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @SuppressWarnings("rawtypes")
+    public ResponseEntity unlikePost(String postId, String userId) {
+        try {
+            Optional<Post> optionalPost = postRepository.findById(postId);
+            
+            if (optionalPost.isPresent()) {
+                Post post = optionalPost.get();
+                
+                if (post.getLikes().contains(userId)) {
+                    post.removeLike(userId);
+                    postRepository.save(post);
+                    return ResponseEntity.status(HttpStatus.OK).build();
+                } else {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @SuppressWarnings("rawtypes")
+    public ResponseEntity deletePost(String postId, String userId){
+        ResponseEntity<Post> response = findPostById(postId);
+        Post post = response.getBody();
+
+        if(post.getUserId().equals(userId)){
+            postRepository.delete(post);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    private ResponseEntity<Post> findPostById(String postId) {
+        try{
+            Optional<Post> optionalPost = postRepository.findById(postId);
+        
+            if (optionalPost.isPresent()) {
+                return ResponseEntity.ok(optionalPost.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }
