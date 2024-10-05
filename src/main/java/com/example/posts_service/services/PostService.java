@@ -36,61 +36,42 @@ public class PostService {
     }
 
     @SuppressWarnings("rawtypes")
-    public ResponseEntity likePost(String postId, String userId) {
-        try {
-            Optional<Post> optionalPost = postRepository.findById(postId);
-            
-            if (optionalPost.isPresent()) {
-                Post post = optionalPost.get();
-                
-                if (!post.getLikes().contains(userId)) {
-                    post.addLike(userId);
-                    postRepository.save(post);
-                    return ResponseEntity.status(HttpStatus.OK).build();
-                } else {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-                }
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+    public ResponseEntity like(String postId, String userId) {
 
-    @SuppressWarnings("rawtypes")
-    public ResponseEntity unlikePost(String postId, String userId) {
-        try {
-            Optional<Post> optionalPost = postRepository.findById(postId);
-            
-            if (optionalPost.isPresent()) {
-                Post post = optionalPost.get();
-                
-                if (post.getLikes().contains(userId)) {
-                    post.removeLike(userId);
-                    postRepository.save(post);
-                    return ResponseEntity.status(HttpStatus.OK).build();
-                } else {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-                }
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        ResponseEntity<Post> response = findPostById(postId);
+
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            return response;
         }
+
+        Post post = response.getBody();
+
+        if (!post.getLikes().contains(userId)) {
+            post.addLike(userId);
+            postRepository.save(post);
+        } else {
+            post.removeLike(userId);
+            postRepository.save(post);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @SuppressWarnings("rawtypes")
     public ResponseEntity deletePost(String postId, String userId){
         ResponseEntity<Post> response = findPostById(postId);
+
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            return response;
+        }
+        
         Post post = response.getBody();
 
         if(post.getUserId().equals(userId)){
             postRepository.delete(post);
             return ResponseEntity.status(HttpStatus.OK).build();
         }else{
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 

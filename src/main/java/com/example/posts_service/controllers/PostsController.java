@@ -54,16 +54,7 @@ public class PostsController {
 
         String userId = tokenService.getIdFromToken(token);
 
-        return postService.likePost(postId, userId);
-    }
-
-    @SuppressWarnings("rawtypes")
-    @PostMapping("/{postId}/unlike")
-    public ResponseEntity unlikePost(@PathVariable String postId, @RequestHeader("Authorization") String token){
-
-        String userId = tokenService.getIdFromToken(token);
-
-        return postService.unlikePost(postId, userId);
+        return postService.like(postId, userId);
     }
 
     @SuppressWarnings("rawtypes")

@@ -43,6 +43,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
         } catch (Exception e) {
+            System.out.println(e);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
