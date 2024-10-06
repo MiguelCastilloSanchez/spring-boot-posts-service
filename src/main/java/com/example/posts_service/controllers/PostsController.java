@@ -30,11 +30,9 @@ public class PostsController {
     @Autowired
     private TokenService tokenService;
 
-    @SuppressWarnings("rawtypes")
-    @GetMapping(value = "/test-admin")
-    public ResponseEntity test(){
-        return ResponseEntity.ok("Hello, Admin!");
-    }
+    // ======================================================
+    // ================  USER Role Endpoints  ===============
+    // ======================================================
 
     @SuppressWarnings("rawtypes")
     @PostMapping(value = "/add-post", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -66,5 +64,15 @@ public class PostsController {
         return postService.deletePost(postId, userId);
     }
 
+    // ======================================================
+    // ===============  ADMIN Role Endpoints  ===============
+    // ======================================================
+
+    @SuppressWarnings("rawtypes")
+    @DeleteMapping("/{postId}/remove")
+    public ResponseEntity deleteAnyPost(@PathVariable String postId){
+
+        return postService.deleteAnyPost(postId);
+    }
 }
 

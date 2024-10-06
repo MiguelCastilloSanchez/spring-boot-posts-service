@@ -39,7 +39,6 @@ public class PostService {
     public ResponseEntity like(String postId, String userId) {
 
         ResponseEntity<Post> response = findPostById(postId);
-
         if (!response.getStatusCode().is2xxSuccessful()) {
             return response;
         }
@@ -59,8 +58,8 @@ public class PostService {
 
     @SuppressWarnings("rawtypes")
     public ResponseEntity deletePost(String postId, String userId){
+        
         ResponseEntity<Post> response = findPostById(postId);
-
         if (!response.getStatusCode().is2xxSuccessful()) {
             return response;
         }
@@ -74,6 +73,22 @@ public class PostService {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
+
+    @SuppressWarnings("rawtypes")
+    public ResponseEntity deleteAnyPost(String postId){
+        
+        ResponseEntity<Post> response = findPostById(postId);
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            return response;
+        }
+        
+        Post post = response.getBody();
+
+        postRepository.delete(post);
+        return ResponseEntity.status(HttpStatus.OK).build();
+
+    }
+
 
     private ResponseEntity<Post> findPostById(String postId) {
         try{
