@@ -28,7 +28,8 @@ public class SecurityConfigurations {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.GET, "/posts/remove").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/posts/remove").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/posts/page/{page}").permitAll()
                         .anyRequest().authenticated()
                 )
                 .build();

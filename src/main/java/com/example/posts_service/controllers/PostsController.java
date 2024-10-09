@@ -31,6 +31,16 @@ public class PostsController {
     private TokenService tokenService;
 
     // ======================================================
+    // ================  Public Endpoints  ===============
+    // ======================================================
+
+    @SuppressWarnings("rawtypes")
+    @GetMapping(value = "/page/{page}")
+    public ResponseEntity getPostsPaginated(@PathVariable int page){
+        return postService.getPosts(page);
+    }
+
+    // ======================================================
     // ================  USER Role Endpoints  ===============
     // ======================================================
 

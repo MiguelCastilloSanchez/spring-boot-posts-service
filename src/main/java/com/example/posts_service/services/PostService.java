@@ -1,14 +1,17 @@
 package com.example.posts_service.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import com.example.posts_service.entities.posts.Post;
 import com.example.posts_service.repositories.PostRepository;
@@ -18,6 +21,13 @@ public class PostService {
     
     @Autowired
     private PostRepository postRepository;
+
+    public ResponseEntity<Page<Post>>getPosts(int page){
+        int size = 5;
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Post> postsPage = postRepository.findAll(pageable);
+        return ResponseEntity.ok(postsPage);
+    }
 
     @SuppressWarnings("rawtypes")
     public ResponseEntity createPost(String userId, String songName, String songAuthor, String songReview){
