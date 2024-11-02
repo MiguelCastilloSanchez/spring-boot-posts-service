@@ -3,6 +3,7 @@ package com.example.posts_service.services;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +83,23 @@ public class PostService {
         }else{
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+    }
+
+    @SuppressWarnings("rawtypes")
+    public ResponseEntity deleteUserPostsAndLikes(String userId){
+
+        postRepository.deleteByUserId(userId);
+
+        List<Post> allPosts = postRepository.findAll();
+        for (Post post : allPosts) {
+            if (post.getLikes().contains(userId)) {
+                post.removeLike(userId);
+                postRepository.save(post);
+            }
+        }
+
+        System.out.println("Data Deleted From User: " + userId);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @SuppressWarnings("rawtypes")
