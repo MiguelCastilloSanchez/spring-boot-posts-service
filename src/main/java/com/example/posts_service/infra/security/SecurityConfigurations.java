@@ -30,6 +30,7 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.DELETE, "/posts/{postId}/remove").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/posts/page/{page}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/posts/page/{page}/{userId}").permitAll()
                         .anyRequest().authenticated()
                 )
                 .build();

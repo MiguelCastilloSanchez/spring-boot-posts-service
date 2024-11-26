@@ -43,7 +43,24 @@ public class PostsController {
     @SuppressWarnings("rawtypes")
     @GetMapping(value = "/page/{page}")
     public ResponseEntity getPostsPaginated(@PathVariable int page){
+        
         return postService.getPosts(page);
+
+    }
+
+    /**
+     * Gives the posts data from an user paginated.
+     *
+     * @param page Integer indicating the number of page
+     * @param userId String indicating user's Id
+     * @return ResponseEntity containing the data from the posts
+     */
+    @SuppressWarnings("rawtypes")
+    @GetMapping(value = "/page/{page}/{userId}")
+    public ResponseEntity getPostsPaginated(@PathVariable int page, @PathVariable String userId){
+
+        return postService.getPostsFromUser(userId, page);
+        
     }
 
     // ======================================================

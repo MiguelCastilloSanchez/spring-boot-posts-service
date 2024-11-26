@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,9 +26,16 @@ public class PostService {
     private PostRepository postRepository;
 
     public ResponseEntity<Page<Post>>getPosts(int page){
-        int size = 5;
-        Pageable pageable = PageRequest.of(page, size);
+        int size = 10;
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
         Page<Post> postsPage = postRepository.findAll(pageable);
+        return ResponseEntity.ok(postsPage);
+    }
+
+    public ResponseEntity<Page<Post>>getPostsFromUser(String userId, int page){
+        int size = 10;
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        Page<Post> postsPage = postRepository.findByUserId(userId, pageable);
         return ResponseEntity.ok(postsPage);
     }
 
